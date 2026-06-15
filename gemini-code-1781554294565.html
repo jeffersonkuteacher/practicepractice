@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versant Section I: Strategic Placement Simulator</title>
+    <style>
+        :root {
+            --versant-blue: #163663;
+            --versant-dark-blue: #0b2243;
+            --panel-gray: #333333;
+            --bg-light: #f3f4f6;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* --- STUDY COMPANION PANEL (LEFT) --- */
+        .study-guide-panel {
+            width: 440px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+
+        .study-guide-panel h2 {
+            color: var(--versant-blue);
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 2px solid var(--versant-blue);
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .framework-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--versant-blue);
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .framework-box h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: var(--versant-blue);
+        }
+
+        .structure-display {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.6;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .blank-highlight {
+            background-color: #fef08a;
+            color: #854d0e;
+            padding: 2px 6px;
+            font-weight: bold;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin: 2px 0;
+        }
+
+        .guide-steps {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 11.5px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* --- VERSANT SIMULATOR REPLICA (RIGHT) --- */
+        .versant-simulator {
+            width: 780px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            min-height: 680px;
+            position: relative;
+        }
+
+        .test-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .test-title-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .test-icon {
+            background-color: #475569;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .test-title {
+            font-size: 20px;
+            color: var(--versant-blue);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .test-pagination {
+            font-size: 15px;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        .prompt-instruction {
+            font-size: 15px;
+            color: #333;
+            padding: 15px 25px 5px 25px;
+            font-weight: 500;
+        }
+
+        .workspace-split {
+            display: flex;
+            flex: 1;
+            padding: 15px 25px;
+            gap: 20px;
+        }
+
+        .passage-container {
+            width: 45%;
+            background-color: var(--panel-gray);
+            color: #ffffff;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-radius: 3px;
+            box-sizing: border-box;
+            height: 380px;
+            overflow-y: auto;
+            white-space: pre-line;
+        }
+
+        .inputs-container {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-instruction {
+            font-size: 12px;
+            color: var(--versant-blue);
+            font-weight: bold;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .word-count-bar {
+            background-color: var(--versant-blue);
+            color: white;
+            font-size: 11px;
+            padding: 4px 10px;
+            text-align: right;
+            border-radius: 3px 3px 0 0;
+            font-weight: bold;
+        }
+
+        .versant-textarea {
+            width: 100%;
+            height: 110px;
+            border: 1px solid #94a3b8;
+            border-top: none;
+            border-radius: 0 0 3px 3px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: none;
+            box-sizing: border-box;
+        }
+
+        .test-footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fafafa;
+            margin-top: auto;
+        }
+
+        .timer-widget {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 60%;
+        }
+
+        .timer-bar-bg {
+            flex: 1;
+            background-color: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .timer-bar-fill {
+            background-color: #22c55e;
+            height: 100%;
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        .timer-text-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .next-btn {
+            background-color: #ffffff;
+            border: 1px solid #94a3b8;
+            color: #333;
+            padding: 6px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* --- FEEDBACK OVERLAY SCREEN --- */
+        .feedback-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ffffff;
+            z-index: 10;
+            padding: 30px;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .feedback-header {
+            color: var(--versant-blue);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .feedback-card {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            float: right;
+        }
+
+        .status-pass { background: #dcfce7; color: #166534; }
+        .status-fail { background: #fee2e2; color: #991b1b; }
+
+        .score-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-box {
+            background: var(--versant-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .score-val { font-size: 28px; font-weight: bold; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="study-guide-panel">
+        <h2>Versant Discourse Matrix</h2>
+        <p style="font-size: 11.5px; color:#64748b; margin-top:-5px; line-height: 1.4;">Read any passage on the right, parse its key components, and fit them seamlessly into these high-scoring frameworks.</p>
+        
+        <div class="framework-box">
+            <h3>📝 High-Accuracy Summary Architecture</h3>
+            <div class="structure-display">
+                "The author suggests that <span class="blank-highlight">Topic</span> serves as a vital catalyst for future growth, establishing <span class="blank-highlight">First Argument</span> as its primary supportive foundation. On the other hand, managing <span class="blank-highlight">Second Argument</span> is critical, as a result of potential systemic disruptions."
+            </div>
+            <ul class="guide-steps">
+                <li><strong>Target Bounds:</strong> 25 - 50 Words.</li>
+                <li><strong>Rule:</strong> Keep your input insertions brief (1-3 words max) to avoid running past the strict 50-word ceiling limit.</li>
+            </ul>
+        </div>
+
+        <div class="framework-box" style="border-left-color: #10b981;">
+            <h3>💭 High-Accuracy Opinion Architecture</h3>
+            <div class="structure-display">
+                "From my perspective, I strongly support the author’s primary claim regarding <span class="blank-highlight">Topic</span> because it yields substantial long-term benefits that outbalance immediate challenges. To illustrate, the text establishes that <span class="blank-highlight">Supporting Passage Fact</span> consistently creates high-value outcomes over time. Furthermore, addressing these structural demands ensures sustainable progress. Consequently, the broader socio-economic effects prove this approach is undeniably necessary for future societal development."
+            </div>
+            <ul class="guide-steps">
+                <li><strong>Target Bounds:</strong> 50+ Words Minimum.</li>
+                <li><strong>Rule:</strong> Extract a complete descriptive sentence or phrase directly from the passage text to fill the second placeholder criteria safely.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="versant-simulator">
+        
+        <div class="feedback-overlay" id="feedbackScreen">
+            <h2 class="feedback-header">Diagnostic Structural Audit Results</h2>
+            
+            <div class="score-summary-grid">
+                <div class="score-box">
+                    <div>Algorithmic Score Index</div>
+                    <div class="score-val" id="lblEstimatedScore">--</div>
+                </div>
+                <div class="score-box" style="background:#4b5563;">
+                    <div>Summary Words</div>
+                    <div class="score-val" id="lblSumWords">0</div>
+                </div>
+                <div class="score-box" style="background:#4b5563;">
+                    <div>Opinion Words</div>
+                    <div class="score-val" id="lblOpWords">0</div>
+                </div>
+            </div>
+
+            <div class="feedback-card">
+                <span class="status-badge" id="badgeSummary">Checking...</span>
+                <h4 style="margin:0 0 10px 0;">Summary Metrics Review (Target: 25-50 Words)</h4>
+                <p id="txtSummaryFeedback" style="font-size:13px; color:#334155; margin:0; line-height:1.4;"></p>
+            </div>
+
+            <div class="feedback-card">
+                <span class="status-badge" id="badgeOpinion">Checking...</span>
+                <h4 style="margin:0 0 10px 0;">Opinion Metrics Review (Target: 50+ Words)</h4>
+                <p id="txtOpinionFeedback" style="font-size:13px; color:#334155; margin:0; line-height:1.4;"></p>
+            </div>
+
+            <button style="align-self:center; background:var(--versant-blue); color:white; border:none; padding:10px 25px; font-weight:bold; border-radius:4px; cursor:pointer;" onclick="window.location.reload()">Start New Session</button>
+        </div>
+
+        <div class="test-header">
+            <div class="test-title-area">
+                <div class="test-icon">I</div>
+                <h1 class="test-title">Summary and Opinion</h1>
+            </div>
+            <div class="test-pagination">1 / 1</div>
+        </div>
+
+        <div class="prompt-instruction">Please read the passage.</div>
+
+        <div class="workspace-split">
+            <div class="passage-container" id="passageContent">Few cities have enough money to pay for all the things they wish to do. This is especially true for transportation projects. It is important for city leaders to know what is best for their city in the long run. In planning for future growth, cities should spend more money on improving public transportation than on improving roads for private cars.
+
+Many cities are growing more and more each year. The population is rising. This means that there are more drivers out on the road. Building wider roads can temporarily lower congestion levels, but it encourages more vehicle ownership, leading to critical bottlenecks and increased air pollution. Investing heavily in subway networks, electric bus lines, and bike pathways safely and sustainably scales metropolitan infrastructure.</div>
+
+            <div class="inputs-container">
+                
+                <div class="input-wrapper">
+                    <div class="field-instruction">Write a short summary of the author's opinion in 25-50 words. Do not copy.</div>
+                    <div class="word-count-bar" id="summaryWordCountBar">Word Count: 0</div>
+                    <textarea class="versant-textarea" id="txtSummary" placeholder="Please type here."></textarea>
+                </div>
+
+                <div class="input-wrapper">
+                    <div class="field-instruction">Write your opinion. Do you agree or disagree with the author? Why? Write at least 50 words. Try to use your own ideas.</div>
+                    <div class="word-count-bar" id="opinionWordCountBar">Word Count: 0</div>
+                    <textarea class="versant-textarea" id="txtOpinion" placeholder="Please type here."></textarea>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="test-footer">
+            <div class="timer-widget">
+                <div class="timer-bar-bg">
+                    <div class="timer-bar-fill" id="timerBar"></div>
+                </div>
+                <div class="timer-text-container">
+                    <span>⏱</span>
+                    <span id="timerClock">18:00</span>
+                </div>
+            </div>
+            <button class="next-btn" id="btnNext">Next ➔</button>
+        </div>
+    </div>
+
+    <script>
+        const txtSummary = document.getElementById('txtSummary');
+        const txtOpinion = document.getElementById('txtOpinion');
+        const summaryWordCountBar = document.getElementById('summaryWordCountBar');
+        const opinionWordCountBar = document.getElementById('opinionWordCountBar');
+        const timerClock = document.getElementById('timerClock');
+        const timerBar = document.getElementById('timerBar');
+        const btnNext = document.getElementById('btnNext');
+        const feedbackScreen = document.getElementById('feedbackScreen');
+
+        let durationSeconds = 18 * 60;
+        const baselineTotal = 18 * 60;
+
+        function runTestClock() {
+            if (durationSeconds <= 0) {
+                clearInterval(clockTicker);
+                executeDiagnosticsEngine();
+                return;
+            }
+            durationSeconds--;
+            let m = Math.floor(durationSeconds / 60);
+            let s = durationSeconds % 60;
+            timerClock.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            timerBar.style.width = `${(durationSeconds / baselineTotal) * 100}%`;
+        }
+        const clockTicker = setInterval(runTestClock, 1000);
+
+        function calculateWords(value) {
+            let spaceClean = value.trim();
+            return spaceClean ? spaceClean.split(/\s+/).length : 0;
+        }
+
+        txtSummary.addEventListener('input', () => {
+            summaryWordCountBar.innerText = `Word Count: ${calculateWords(txtSummary.value)}`;
+        });
+
+        txtOpinion.addEventListener('input', () => {
+            opinionWordCountBar.innerText = `Word Count: ${calculateWords(txtOpinion.value)}`;
+        });
+
+        btnNext.addEventListener('click', () => {
+            if (confirm("Halt timer arrays and request structural accuracy checking analysis?")) {
+                clearInterval(clockTicker);
+                executeDiagnosticsEngine();
+            }
+        });
+
+        function executeDiagnosticsEngine() {
+            feedbackScreen.style.display = 'flex';
+            let finalSumCount = calculateWords(txtSummary.value);
+            let finalOpCount = calculateWords(txtOpinion.value);
+
+            document.getElementById('lblSumWords').innerText = finalSumCount;
+            document.getElementById('lblOpWords').innerText = finalOpCount;
+
+            let isSumValid = (finalSumCount >= 25 && finalSumCount <= 50);
+            let isOpValid = (finalOpCount >= 50);
+
+            // Audit Summary Element Box Output
+            if (isSumValid) {
+                document.getElementById('badgeSummary').innerText = "PASSED";
+                document.getElementById('badgeSummary').className = "status-badge status-pass";
+                document.getElementById('txtSummaryFeedback').innerText = `Excellent structure management! Packing ${finalSumCount} words matches the automated 25-50 constraint parser without length penalty overrides.`;
+            } else {
+                document.getElementById('badgeSummary').innerText = "BOUND REJECTION";
+                document.getElementById('badgeSummary').className = "status-badge status-fail";
+                document.getElementById('txtSummaryFeedback').innerText = `Constraint Alert: Found ${finalSumCount} words. To satisfy testing matrices, copy and fill out the fixed structural framework block shown in the left column.`;
+            }
+
+            // Audit Opinion Element Box Output
+            if (isOpValid) {
+                document.getElementById('badgeOpinion').innerText = "PASSED";
+                document.getElementById('badgeOpinion').className = "status-badge status-pass";
+                document.getElementById('txtOpinionFeedback').innerText = `Successful response output length. Logging ${finalOpCount} words satisfies the formal 50-word minimum structural metric.`;
+            } else {
+                document.getElementById('badgeOpinion').innerText = "VOLUME REJECTION";
+                document.getElementById('badgeOpinion').className = "status-badge status-fail";
+                document.getElementById('txtOpinionFeedback').innerText = `Constraint Alert: Falling short at ${finalOpCount} words triggers scaling validation drops. Use the four-step organizational connectors sequence block to increase structural size.`;
+            }
+
+            // Algorithmic Structural Performance Approximation
+            let scoreMatrix = 20;
+            if (isSumValid) scoreMatrix += 25;
+            if (isOpValid) scoreMatrix += 25;
+            if (txtOpinion.value.toLowerCase().includes("consequently")) scoreMatrix += 5;
+            if (txtOpinion.value.toLowerCase().includes("furthermore")) scoreMatrix += 5;
+
+            document.getElementById('lblEstimatedScore').innerText = `${Math.min(80, scoreMatrix)} / 80`;
+        }
+    </script>
+</body>
+</html>
